@@ -1,7 +1,6 @@
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Content } from '@/blocks/Content/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
-import { slugField } from 'payload'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
 import {
@@ -18,7 +17,7 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { DefaultDocumentIDType, Where } from 'payload'
+import { DefaultDocumentIDType, slugField, Where } from 'payload'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
@@ -55,6 +54,53 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
   },
   fields: [
     { name: 'title', type: 'text', required: true },
+    {
+      name: 'short_description',
+      type: 'text',
+      admin: {
+        description: 'Brief description of the product',
+      },
+    },
+    {
+      name: 'origin',
+      type: 'select',
+      options: [
+        { label: 'Italy', value: 'italy' },
+        { label: 'Portugal', value: 'portugal' },
+        { label: 'Spain', value: 'spain' },
+        { label: 'Norway', value: 'norway' },
+        { label: 'Sweden', value: 'sweden' },
+        { label: 'Finland', value: 'finland' },
+        { label: 'Germany', value: 'germany' },
+        { label: 'UK', value: 'uk' },
+        { label: 'France', value: 'france' },
+        { label: 'Austria', value: 'austria' },
+        { label: 'Malta', value: 'malta' },
+        { label: 'Poland', value: 'poland' },
+        { label: 'Greece', value: 'greece' },
+        { label: 'Slovenia', value: 'slovenia' },
+        { label: 'Croatia', value: 'croatia' },
+      ],
+      admin: {
+        description: 'Country or region of origin',
+      },
+    },
+    {
+      name: 'type',
+      type: 'select',
+      options: [
+        { label: 'Marble', value: 'marble' },
+        { label: 'Sandstone', value: 'sandstone' },
+        { label: 'Travertine', value: 'travertine' },
+        { label: 'Limestone', value: 'limestone' },
+        { label: 'Granite', value: 'granite' },
+        { label: 'Slate', value: 'slate' },
+        { label: 'Serpentinite', value: 'serpentinite' },
+      ],
+      admin: {
+        description: 'Type of stone',
+      },
+    },
     {
       type: 'tabs',
       tabs: [
