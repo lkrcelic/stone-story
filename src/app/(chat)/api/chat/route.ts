@@ -3,11 +3,7 @@ import { entitlementsByUserType } from '@/lib/ai/entitlements'
 import type { ChatModel } from '@/lib/ai/models'
 import { type RequestHints, systemPrompt } from '@/lib/ai/prompts'
 import { myProvider } from '@/lib/ai/providers'
-import { createDocument } from '@/lib/ai/tools/create-document'
-import { getWeather } from '@/lib/ai/tools/get-weather'
-import { requestSuggestions } from '@/lib/ai/tools/request-suggestions'
 import { searchProducts } from '@/lib/ai/tools/search-products'
-import { updateDocument } from '@/lib/ai/tools/update-document'
 import {
   createStreamId,
   deleteChatById,
@@ -159,11 +155,9 @@ export async function POST(request: Request) {
 
     const uiMessages = [...convertToUIMessages(messagesFromDb), message]
 
-    const { longitude, latitude, city, country } = geolocation(request)
+    const { city, country } = geolocation(request)
 
     const requestHints: RequestHints = {
-      longitude,
-      latitude,
       city,
       country,
     }
@@ -199,23 +193,10 @@ export async function POST(request: Request) {
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages: convertToModelMessages(uiMessages),
           stopWhen: stepCountIs(5),
-          experimental_activeTools: [
-            'searchProducts',
-            'getWeather',
-            'createDocument',
-            'updateDocument',
-            'requestSuggestions',
-          ],
+          experimental_activeTools: ['searchProducts'],
           experimental_transform: smoothStream({ chunking: 'word' }),
           tools: {
             searchProducts,
-            getWeather,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-            }),
           },
           onFinish: async ({ usage }) => {
             console.log('[CHAT API] Stream finished, processing usage:', usage)

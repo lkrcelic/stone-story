@@ -46,7 +46,7 @@ export const Price = ({
   if (typeof amount === 'number') {
     return (
       <Element className={className} suppressHydrationWarning>
-        {formatCurrency(amount, { currency: currencyToUse })}
+        {formatCurrency(amount * 100, { currency: currencyToUse })}
       </Element>
     )
   }
@@ -54,7 +54,7 @@ export const Price = ({
   if (highestAmount && highestAmount !== lowestAmount) {
     return (
       <Element className={className} suppressHydrationWarning>
-        {`${formatCurrency(lowestAmount, { currency: currencyToUse })} - ${formatCurrency(highestAmount, { currency: currencyToUse })}`}
+        {`${formatCurrency(lowestAmount * 100, { currency: currencyToUse })} - ${formatCurrency(highestAmount * 100, { currency: currencyToUse })}`}
       </Element>
     )
   }
@@ -62,7 +62,7 @@ export const Price = ({
   if (lowestAmount) {
     return (
       <Element className={className} suppressHydrationWarning>
-        {`${formatCurrency(lowestAmount, { currency: currencyToUse })}`}
+        {`${formatCurrency(lowestAmount * 100, { currency: currencyToUse })}`}
       </Element>
     )
   }

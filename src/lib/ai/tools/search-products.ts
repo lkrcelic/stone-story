@@ -62,6 +62,7 @@ You can search by multiple criteria at once. Always use this tool when customers
         where.or = [
           { title: { contains: input.query } },
           { short_description: { contains: input.query } },
+          { description: { contains: input.query } },
         ]
       }
 
@@ -88,7 +89,11 @@ You can search by multiple criteria at once. Always use this tool when customers
 
       // Add stock filter
       if (input.inStock === true) {
-        where['inventory.stock'] = { greater_than: 0 }
+        where.and = [
+          ...(where.and ?? []),
+          { inventory: { exists: true } },
+          { inventory: { greater_than: 0 } },
+        ]
       }
 
       console.log('[PRODUCT SEARCH] Query where clause:', JSON.stringify(where, null, 2))
@@ -103,18 +108,35 @@ You can search by multiple criteria at once. Always use this tool when customers
       console.log('[PRODUCT SEARCH] Found', result.docs.length, 'products')
 
       // Format the results for the AI
-      const products = result.docs.map((product: any) => ({
-        id: product.id,
-        title: product.title,
-        description: product.short_description || 'No description available',
-        type: product.type,
-        origin: product.origin,
-        price: product.priceInUSD,
-        inStock: product.inventory?.stock > 0,
-        stock: product.inventory?.stock || 0,
-        slug: product.slug,
-        hasVariants: product.enableVariants || false,
-      }))
+      const products = result.docs.map((product: any) => {
+        const gallery = product.gallery || []
+        const images = gallery
+          .map((item: any) => {
+            if (item?.image && typeof item.image === 'object') {
+              return {
+                url: item.image.url,
+                alt: item.image.alt || product.title,
+                filename: item.image.filename,
+              }
+            }
+            return null
+          })
+          .filter(Boolean)
+
+        return {
+          id: product.id,
+          title: product.title,
+          description: product.short_description || 'No description available',
+          type: product.type,
+          origin: product.origin,
+          price: product.priceInUSD,
+          inStock: product.inventory > 0,
+          stock: product.inventory,
+          slug: product.slug,
+          hasVariants: product.enableVariants || false,
+          images,
+        }
+      })
 
       return {
         success: true,
