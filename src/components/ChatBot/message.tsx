@@ -6,8 +6,6 @@ import type { UseChatHelpers } from '@ai-sdk/react'
 import equal from 'fast-deep-equal'
 import { memo, useState } from 'react'
 import { useDataStream } from './data-stream-provider'
-import { DocumentToolResult } from './document'
-import { DocumentPreview } from './document-preview'
 import { MessageContent } from './elements/message'
 import { Response } from './elements/response'
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from './elements/tool'
@@ -16,7 +14,7 @@ import { MessageActions } from './message-actions'
 import { MessageEditor } from './message-editor'
 import { MessageReasoning } from './message-reasoning'
 import { PreviewAttachment } from './preview-attachment'
-import { Weather } from './weather'
+import { ProductSearchResults } from './product-search-results'
 
 const PurePreviewMessage = ({
   chatId,
@@ -132,75 +130,12 @@ const PurePreviewMessage = ({
               }
             }
 
-            if (type === 'tool-getWeather') {
+            if (type === 'tool-searchProducts') {
               const { toolCallId, state } = part
 
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
-                  <ToolHeader state={state} type="tool-getWeather" />
-                  <ToolContent>
-                    {state === 'input-available' && <ToolInput input={part.input} />}
-                    {state === 'output-available' && (
-                      <ToolOutput
-                        errorText={undefined}
-                        output={<Weather weatherAtLocation={part.output} />}
-                      />
-                    )}
-                  </ToolContent>
-                </Tool>
-              )
-            }
-
-            if (type === 'tool-createDocument') {
-              const { toolCallId } = part
-
-              if (part.output && 'error' in part.output) {
-                return (
-                  <div
-                    className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
-                    key={toolCallId}
-                  >
-                    Error creating document: {String(part.output.error)}
-                  </div>
-                )
-              }
-
-              return (
-                <DocumentPreview isReadonly={isReadonly} key={toolCallId} result={part.output} />
-              )
-            }
-
-            if (type === 'tool-updateDocument') {
-              const { toolCallId } = part
-
-              if (part.output && 'error' in part.output) {
-                return (
-                  <div
-                    className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-500 dark:bg-red-950/50"
-                    key={toolCallId}
-                  >
-                    Error updating document: {String(part.output.error)}
-                  </div>
-                )
-              }
-
-              return (
-                <div className="relative" key={toolCallId}>
-                  <DocumentPreview
-                    args={{ ...part.output, isUpdate: true }}
-                    isReadonly={isReadonly}
-                    result={part.output}
-                  />
-                </div>
-              )
-            }
-
-            if (type === 'tool-requestSuggestions') {
-              const { toolCallId, state } = part
-
-              return (
-                <Tool defaultOpen={true} key={toolCallId}>
-                  <ToolHeader state={state} type="tool-requestSuggestions" />
+                  <ToolHeader state={state} type="tool-searchProducts" />
                   <ToolContent>
                     {state === 'input-available' && <ToolInput input={part.input} />}
                     {state === 'output-available' && (
@@ -212,11 +147,7 @@ const PurePreviewMessage = ({
                               Error: {String(part.output.error)}
                             </div>
                           ) : (
-                            <DocumentToolResult
-                              isReadonly={isReadonly}
-                              result={part.output}
-                              type="request-suggestions"
-                            />
+                            <ProductSearchResults output={part.output} />
                           )
                         }
                       />
