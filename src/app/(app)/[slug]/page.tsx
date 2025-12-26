@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { homeStaticData } from '@/endpoints/seed/home-static'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
-import { homeStaticData } from '@/endpoints/seed/home-static'
-import React from 'react'
+import { getPayload } from 'payload'
 
 import type { Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
@@ -27,7 +26,8 @@ export async function generateStaticParams() {
 
   const params = pages.docs
     ?.filter((doc) => {
-      return doc.slug !== 'home'
+      // Exclude 'home' and 'chat' from static generation
+      return doc.slug !== 'home' && doc.slug !== 'chat'
     })
     .map(({ slug }) => {
       return { slug }
@@ -44,7 +44,6 @@ type Args = {
 
 export default async function Page({ params }: Args) {
   const { slug = 'home' } = await params
-  const url = '/' + slug
 
   let page = await queryPageBySlug({
     slug,

@@ -1,10 +1,10 @@
-import type { Product, Variant } from '@/payload-types'
+import type { Product } from '@/payload-types'
 
+import { Price } from '@/components/ChatBot/Price'
+import { Media } from '@/components/Media'
+import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
-import clsx from 'clsx'
-import { Media } from '@/components/Media'
-import { Price } from '@/components/Price'
 
 type Props = {
   product: Partial<Product>

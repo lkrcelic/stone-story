@@ -1,5 +1,5 @@
+import { Price } from '@/components/ChatBot/Price'
 import { OrderStatus } from '@/components/OrderStatus'
-import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
 import { Order } from '@/payload-types'
 import { formatDateTime } from '@/utilities/formatDateTime'

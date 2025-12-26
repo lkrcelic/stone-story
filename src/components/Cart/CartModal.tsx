@@ -1,6 +1,6 @@
 'use client'
 
-import { Price } from '@/components/Price'
+import { Price } from '@/components/ChatBot/Price'
 import {
   Sheet,
   SheetContent,
@@ -16,11 +16,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 
+import { Button } from '@/components/ui/button'
+import { Product } from '@/payload-types'
 import { DeleteItemButton } from './DeleteItemButton'
 import { EditItemQuantityButton } from './EditItemQuantityButton'
 import { OpenCartButton } from './OpenCart'
-import { Button } from '@/components/ui/button'
-import { Product } from '@/payload-types'
 
 export function CartModal() {
   const { cart } = useCart()
