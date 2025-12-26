@@ -44,6 +44,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    push: false, // Disable auto-push in development - use migrations instead
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   editor: lexicalEditor({
     features: () => {
