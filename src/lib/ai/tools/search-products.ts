@@ -62,7 +62,6 @@ You can search by multiple criteria at once. Always use this tool when customers
         where.or = [
           { title: { contains: input.query } },
           { short_description: { contains: input.query } },
-          { description: { contains: input.query } },
         ]
       }
 
