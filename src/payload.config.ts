@@ -42,7 +42,7 @@ export default buildConfig({
   collections: [Users, Pages, Categories, Media],
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: process.env.POSTGRES_URL || '',
     },
     push: false, // Disable auto-push in development - use migrations instead
     migrationDir: path.resolve(dirname, 'migrations'),
