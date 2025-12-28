@@ -1,11 +1,10 @@
 import type { Footer } from '@/payload-types'
 
 import { FooterMenu } from '@/components/Footer/menu'
-import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
+import { LogoIcon } from '@/components/icons/logo'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import Link from 'next/link'
-import React, { Suspense } from 'react'
-import { LogoIcon } from '@/components/icons/logo'
+import { Suspense } from 'react'
 
 const { COMPANY_NAME, SITE_NAME } = process.env
 
@@ -43,7 +42,7 @@ export async function Footer() {
             <FooterMenu menu={menu} />
           </Suspense>
           <div className="md:ml-auto flex flex-col gap-4 items-end">
-            <ThemeSelector />
+            <h3 className="text-lg font-semibold text-black dark:text-white">Stone Story</h3>
           </div>
         </div>
       </div>

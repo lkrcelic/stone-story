@@ -1,11 +1,14 @@
 import { Chat } from '@/components/ChatBot/chat'
 import { DataStreamHandler } from '@/components/ChatBot/data-stream-handler'
 import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models'
-import { auth } from '@/lib/payload-auth'
 import { generateUUID } from '@/lib/utils'
+import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: 'Chat',
+}
 
 export default function Page() {
   return (
@@ -16,12 +19,6 @@ export default function Page() {
 }
 
 async function NewChatPage() {
-  const session = await auth()
-
-  if (!session) {
-    redirect('/api/auth/guest')
-  }
-
   const id = generateUUID()
 
   const cookieStore = await cookies()

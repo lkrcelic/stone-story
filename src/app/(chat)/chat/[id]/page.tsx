@@ -1,54 +1,50 @@
-import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
+import { cookies } from 'next/headers'
+import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
-import { Chat } from "@/components/ChatBot/chat";
-import { DataStreamHandler } from "@/components/ChatBot/data-stream-handler";
-import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
-import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
-import { auth } from "@/lib/payload-auth";
-import { convertToUIMessages } from "@/lib/utils";
+import { Chat } from '@/components/ChatBot/chat'
+import { DataStreamHandler } from '@/components/ChatBot/data-stream-handler'
+import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models'
+import { getChatById, getMessagesByChatId } from '@/lib/db/queries'
+import { auth } from '@/lib/payload-auth'
+import { convertToUIMessages } from '@/lib/utils'
 
 export default function Page(props: { params: Promise<{ id: string }> }) {
   return (
     <Suspense fallback={<div className="flex h-dvh" />}>
       <ChatPage params={props.params} />
     </Suspense>
-  );
+  )
 }
 
 async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const chat = await getChatById({ id });
+  const { id } = await params
+  const chat = await getChatById({ id })
 
   if (!chat) {
-    notFound();
+    notFound()
   }
 
-  const session = await auth();
+  const session = await auth()
 
-  if (!session) {
-    redirect("/api/auth/guest");
-  }
-
-  if (chat.visibility === "private") {
-    if (!session.user) {
-      return notFound();
+  if (chat.visibility === 'private') {
+    if (!session?.user) {
+      return notFound()
     }
 
     if (session.user.id !== chat.userId) {
-      return notFound();
+      return notFound()
     }
   }
 
   const messagesFromDb = await getMessagesByChatId({
     id,
-  });
+  })
 
-  const uiMessages = convertToUIMessages(messagesFromDb);
+  const uiMessages = convertToUIMessages(messagesFromDb)
 
-  const cookieStore = await cookies();
-  const chatModelFromCookie = cookieStore.get("chat-model");
+  const cookieStore = await cookies()
+  const chatModelFromCookie = cookieStore.get('chat-model')
 
   if (!chatModelFromCookie) {
     return (
@@ -64,7 +60,7 @@ async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
         />
         <DataStreamHandler />
       </>
-    );
+    )
   }
 
   return (
@@ -80,5 +76,5 @@ async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
       />
       <DataStreamHandler />
     </>
-  );
+  )
 }

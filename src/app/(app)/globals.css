@@ -1,9 +1,11 @@
 @import 'tailwindcss';
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
 
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is([data-theme='dark'] *));
+@custom-variant dyslexic (&:is([data-font='dyslexic'] *));
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -26,6 +28,41 @@
 @theme {
   --font-sans: var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), sans-serif;
+  --font-dyslexic: 'OpenDyslexic', sans-serif;
+}
+
+[data-font='dyslexic'] {
+  font-family: var(--font-dyslexic) !important;
+}
+
+[data-font='dyslexic'] * {
+  font-family: var(--font-dyslexic) !important;
+}
+
+[data-font-size='large'] {
+  font-size: 1.04rem !important;
+}
+
+[data-font-size='large'] * {
+  font-size: 1.04em !important;
+}
+
+[data-link-style='highlight'] a {
+  text-decoration: underline !important;
+  background-color: #ffeb3b !important;
+  color: #000000 !important;
+  padding: 2px 4px !important;
+  border-radius: 2px !important;
+}
+
+[data-link-style='highlight'] a .text-primary\/50,
+[data-link-style='highlight'] a .group-hover\:text-primary\/100 {
+  color: hsl(222.2 47.4% 11.2% / 0.5) !important;
+}
+
+[data-link-style='highlight'] a:hover .text-primary\/50,
+[data-link-style='highlight'] a:hover .group-hover\:text-primary\/100 {
+  color: hsl(222.2 47.4% 11.2%) !important;
 }
 
 @utility container {

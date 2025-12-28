@@ -1,11 +1,13 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
 
 /* include utility classes in streamdown */
 @source '../node_modules/streamdown/dist/index.js';
 
 /* custom variant for setting dark mode programmatically */
-@custom-variant dark (&:is(.dark, .dark *));
+@custom-variant dark (&:is([data-theme='dark'] *));
+@custom-variant dyslexic (&:is([data-font='dyslexic'] *));
 
 /* include plugins */
 @plugin "tailwindcss-animate";
@@ -51,7 +53,7 @@
 }
 
 /* define design tokens (dark mode) */
-.dark {
+[data-theme='dark'] {
   --background: hsl(240 10% 3.9%);
   --foreground: hsl(0 0% 98%);
   --card: hsl(240 10% 3.9%);
@@ -91,6 +93,7 @@
 @theme {
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
+  --font-dyslexic: 'OpenDyslexic', sans-serif;
 
   --breakpoint-toast-mobile: 600px;
 
@@ -306,6 +309,40 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+[data-font='dyslexic'] {
+  font-family: var(--font-dyslexic) !important;
+}
+
+[data-font='dyslexic'] * {
+  font-family: var(--font-dyslexic) !important;
+}
+
+[data-font-size='large'] {
+  font-size: 1.04rem !important;
+}
+
+[data-font-size='large'] * {
+  font-size: 1.04em !important;
+}
+
+[data-link-style='highlight'] a {
+  text-decoration: underline !important;
+  background-color: #ffeb3b !important;
+  color: #000000 !important;
+  padding: 2px 4px !important;
+  border-radius: 2px !important;
+}
+
+[data-link-style='highlight'] a .text-primary\/50,
+[data-link-style='highlight'] a .group-hover\:text-primary\/100 {
+  color: hsl(222.2 47.4% 11.2% / 0.5) !important;
+}
+
+[data-link-style='highlight'] a:hover .text-primary\/50,
+[data-link-style='highlight'] a:hover .group-hover\:text-primary\/100 {
+  color: hsl(222.2 47.4% 11.2%) !important;
 }
 
 @layer base {
