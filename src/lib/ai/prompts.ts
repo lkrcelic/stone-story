@@ -25,7 +25,6 @@ About the origin of user's request:
 `
 
 export const systemPrompt = ({
-  selectedChatModel,
   requestHints,
 }: {
   selectedChatModel: string
