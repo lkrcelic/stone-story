@@ -102,23 +102,21 @@ export async function POST(request: Request) {
 
     console.log('[CHAT API] Getting user session...')
     const session = await auth()
+    const userId = session?.user?.id || 'guest'
+    console.log('[CHAT API] User:', userId)
 
-    if (!session?.user) {
-      console.error('[CHAT API] No user session found')
-      return new ChatSDKError('unauthorized:chat').toResponse()
-    }
-    console.log('[CHAT API] User authenticated:', session.user.id)
+    if (session?.user) {
+      console.log('[CHAT API] Checking message count for user:', session.user.id)
+      const messageCount = await getMessageCountByUserId({
+        id: session.user.id,
+        differenceInHours: 24,
+      })
+      console.log('[CHAT API] Message count:', messageCount)
 
-    console.log('[CHAT API] Checking message count for user:', session.user.id)
-    const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
-      differenceInHours: 24,
-    })
-    console.log('[CHAT API] Message count:', messageCount)
-
-    if (messageCount > entitlementsByUserType['regular'].maxMessagesPerDay) {
-      console.error('[CHAT API] Rate limit exceeded:', messageCount)
-      return new ChatSDKError('rate_limit:chat').toResponse()
+      if (messageCount > entitlementsByUserType['regular'].maxMessagesPerDay) {
+        console.error('[CHAT API] Rate limit exceeded:', messageCount)
+        return new ChatSDKError('rate_limit:chat').toResponse()
+      }
     }
 
     console.log('[CHAT API] Getting chat by ID:', id)
@@ -127,7 +125,7 @@ export async function POST(request: Request) {
 
     if (chat) {
       console.log('[CHAT API] Chat found, userId:', chat.userId)
-      if (chat.userId !== session.user.id) {
+      if (session?.user && chat.userId !== session.user.id) {
         console.error('[CHAT API] User does not own this chat')
         return new ChatSDKError('forbidden:chat').toResponse()
       }
@@ -145,7 +143,7 @@ export async function POST(request: Request) {
       console.log('[CHAT API] Saving new chat...')
       await saveChat({
         id,
-        userId: session.user.id,
+        userId: userId,
         title,
         visibility: selectedVisibilityType,
       })
