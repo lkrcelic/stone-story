@@ -27,5 +27,11 @@ export const InitFont = () => {
     })();
   `
 
-  return <Script dangerouslySetInnerHTML={{ __html: script }} strategy="beforeInteractive" />
+  return (
+    <Script
+      id="font-script"
+      dangerouslySetInnerHTML={{ __html: script }}
+      strategy="beforeInteractive"
+    />
+  )
 }

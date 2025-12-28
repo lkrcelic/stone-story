@@ -974,7 +974,7 @@ export interface Cart {
         product?: (number | null) | Product;
         variant?: (number | null) | Variant;
         quantity: number;
-        id?: string | null;
+        id?: number | null;
       }[]
     | null;
   customer?: (number | null) | User;

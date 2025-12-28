@@ -1,4 +1,4 @@
-import type { Product, CarouselBlock as CarouselBlockProps } from '@/payload-types'
+import type { CarouselBlock as CarouselBlockProps, Product } from '@/payload-types'
 
 import configPromise from '@payload-config'
 import { DefaultDocumentIDType, getPayload } from 'payload'
@@ -11,7 +11,7 @@ export const CarouselBlock: React.FC<
     id?: DefaultDocumentIDType
   }
 > = async (props) => {
-  const { id, categories, limit = 3, populateBy, selectedDocs } = props
+  const { categories, limit = 3, populateBy, selectedDocs } = props
 
   let products: Product[] = []
 
