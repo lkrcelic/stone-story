@@ -35,7 +35,9 @@ export const Media: CollectionConfig = {
       }),
     },
   ],
-  upload: {
-    staticDir: path.resolve(dirname, '../../public/media'),
-  },
+  upload: process.env.VERCEL
+    ? true
+    : {
+        staticDir: path.resolve(dirname, '../../public/media'),
+      },
 }

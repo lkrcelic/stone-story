@@ -190,6 +190,7 @@ export async function POST(request: Request) {
           model: myProvider.languageModel(selectedChatModel),
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages: convertToModelMessages(uiMessages),
+          temperature: 0.3, // Lower temperature (0-1) reduces hallucinations, increases factual accuracy
           stopWhen: stepCountIs(5),
           experimental_activeTools: ['searchProducts'],
           experimental_transform: smoothStream({ chunking: 'word' }),

@@ -60,7 +60,7 @@ export const AccessibilityButton: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-20 right-4 z-50">
       <button
         className="w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center"
         aria-label="Accessibility options"
