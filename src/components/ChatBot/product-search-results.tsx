@@ -33,9 +33,6 @@ export function ProductSearchResults({ output }: { output: ProductSearchOutput }
 
   return (
     <div className="space-y-4">
-      <div className="text-sm text-muted-foreground">
-        Found {output.count} product{output.count !== 1 ? 's' : ''}
-      </div>
       <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
         {output.products.map((product) => {
           const firstImage = product.images?.[0]
