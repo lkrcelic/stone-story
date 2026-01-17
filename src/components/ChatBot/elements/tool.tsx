@@ -15,13 +15,16 @@ import { CodeBlock } from './code-block'
 export type ToolProps = ComponentProps<typeof Collapsible>
 
 export const Tool = ({ className, ...props }: ToolProps) => (
-  <Collapsible className={cn('not-prose mb-4 w-full rounded-md border', className)} {...props} />
+  <Collapsible
+    className={cn('not-prose mb-4 w-full overflow-hidden rounded-md border', className)}
+    {...props}
+  />
 )
 
 export type ToolHeaderProps = {
+  className?: string
   type: string
   state: ToolUIPart['state']
-  className?: string
 }
 
 const getStatusBadge = (status: ToolUIPart['state']) => {
@@ -66,7 +69,7 @@ export type ToolContentProps = ComponentProps<typeof CollapsibleContent>
 export const ToolContent = ({ className, ...props }: ToolContentProps) => (
   <CollapsibleContent
     className={cn(
-      'data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-popover-foreground outline-hidden data-[state=closed]:animate-out data-[state=open]:animate-in',
+      'overflow-hidden data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-popover-foreground outline-hidden data-[state=closed]:animate-out data-[state=open]:animate-in',
       className,
     )}
     {...props}
@@ -99,15 +102,15 @@ export const ToolOutput = ({ className, output, errorText, ...props }: ToolOutpu
   }
 
   return (
-    <div className={cn('p-4', className)} {...props}>
+    <div className={cn('overflow-hidden p-4', className)} {...props}>
       <div
         className={cn(
-          'overflow-x-auto rounded-md text-xs [&_table]:w-full',
+          'overflow-hidden rounded-md text-xs [&_table]:w-full',
           errorText ? 'bg-destructive/10 text-destructive' : '',
         )}
       >
         {errorText && <div>{errorText}</div>}
-        {output && <div>{output}</div>}
+        {output && <div className="overflow-hidden">{output}</div>}
       </div>
     </div>
   )

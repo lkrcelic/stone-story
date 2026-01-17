@@ -32,7 +32,8 @@ async function NewChatPage() {
           id={id}
           initialChatModel={DEFAULT_CHAT_MODEL}
           initialMessages={[]}
-          initialVisibilityType="private"
+          initialVisibilityType="public"
+          isAuthenticated={false}
           isReadonly={false}
           key={id}
         />
@@ -48,7 +49,8 @@ async function NewChatPage() {
         id={id}
         initialChatModel={modelIdFromCookie.value}
         initialMessages={[]}
-        initialVisibilityType="private"
+        initialVisibilityType="public"
+        isAuthenticated={false}
         isReadonly={false}
         key={id}
       />
