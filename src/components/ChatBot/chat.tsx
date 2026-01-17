@@ -41,6 +41,7 @@ export function Chat({
   isReadonly,
   autoResume,
   initialLastContext,
+  isAuthenticated = true,
 }: {
   id: string
   initialMessages: ChatMessage[]
@@ -49,6 +50,7 @@ export function Chat({
   isReadonly: boolean
   autoResume: boolean
   initialLastContext?: AppUsage
+  isAuthenticated?: boolean
 }) {
   const router = useRouter()
 
@@ -163,6 +165,7 @@ export function Chat({
       <div className="overscroll-behavior-contain flex h-dvh min-w-0 touch-pan-y flex-col bg-background">
         <ChatHeader
           chatId={id}
+          isAuthenticated={isAuthenticated}
           isReadonly={isReadonly}
           selectedVisibilityType={initialVisibilityType}
         />

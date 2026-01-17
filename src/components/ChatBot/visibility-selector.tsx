@@ -38,9 +38,11 @@ export function VisibilitySelector({
   chatId,
   className,
   selectedVisibilityType,
+  isAuthenticated = true,
 }: {
   chatId: string
   selectedVisibilityType: VisibilityType
+  isAuthenticated?: boolean
 } & React.ComponentProps<typeof Button>) {
   const [open, setOpen] = useState(false)
 
@@ -53,6 +55,11 @@ export function VisibilitySelector({
     () => visibilities.find((visibility) => visibility.id === visibilityType),
     [visibilityType],
   )
+
+  // Hide visibility selector for non-authenticated users
+  if (!isAuthenticated) {
+    return null
+  }
 
   return (
     <DropdownMenu onOpenChange={setOpen} open={open}>

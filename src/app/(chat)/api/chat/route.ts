@@ -105,6 +105,12 @@ export async function POST(request: Request) {
     const userId = session?.user?.id || 'guest'
     console.log('[CHAT API] User:', userId)
 
+    // Force guest users to use public visibility
+    const visibilityType: VisibilityType = !session?.user ? 'public' : selectedVisibilityType
+    if (!session?.user && selectedVisibilityType === 'private') {
+      console.log('[CHAT API] Guest user detected, forcing public visibility')
+    }
+
     if (session?.user) {
       console.log('[CHAT API] Checking message count for user:', session.user.id)
       const messageCount = await getMessageCountByUserId({
@@ -145,7 +151,7 @@ export async function POST(request: Request) {
         id,
         userId: userId,
         title,
-        visibility: selectedVisibilityType,
+        visibility: visibilityType,
       })
       console.log('[CHAT API] New chat saved')
       // New chat - no need to fetch messages, it's empty

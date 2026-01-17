@@ -37,6 +37,13 @@ async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
     }
   }
 
+  // For guest users (userId === 'guest'), allow access to their public chats
+  // For authenticated users, check ownership
+  const isGuestChat = chat.userId === 'guest'
+  const isOwner = session?.user?.id === chat.userId
+  const isReadonly = !isOwner && !isGuestChat
+  const isAuthenticated = !!session?.user
+
   const messagesFromDb = await getMessagesByChatId({
     id,
   })
@@ -56,7 +63,8 @@ async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
           initialLastContext={chat.lastContext ?? undefined}
           initialMessages={uiMessages}
           initialVisibilityType={chat.visibility}
-          isReadonly={session?.user?.id !== chat.userId}
+          isAuthenticated={isAuthenticated}
+          isReadonly={isReadonly}
         />
         <DataStreamHandler />
       </>
@@ -72,7 +80,8 @@ async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
         initialLastContext={chat.lastContext ?? undefined}
         initialMessages={uiMessages}
         initialVisibilityType={chat.visibility}
-        isReadonly={session?.user?.id !== chat.userId}
+        isAuthenticated={isAuthenticated}
+        isReadonly={isReadonly}
       />
       <DataStreamHandler />
     </>

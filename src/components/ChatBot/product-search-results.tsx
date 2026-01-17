@@ -28,11 +28,11 @@ type ProductSearchOutput = {
 
 export function ProductSearchResults({ output }: { output: ProductSearchOutput }) {
   if (!output.success || output.products.length === 0) {
-    return null // Don't show anything when no products are found
+    return null
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-full overflow-hidden">
       <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
         {output.products.map((product) => {
           const firstImage = product.images?.[0]
