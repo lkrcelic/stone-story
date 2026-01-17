@@ -7,7 +7,11 @@ from pathlib import Path
 # ==============================
 
 IMAGES_FOLDER = "C:/Users/lkrcelic/Desktop/stone_pictures"
-API_URL = "http://localhost:3000/api/media"
+
+# HOSTNAME = "http://localhost:3000"  # Local development
+HOSTNAME = "https://stone-story.vercel.app"  # Production
+
+API_URL = f"{HOSTNAME}/api/media"
 
 # Get your JWT token from the browser after logging in to /admin
 # Or use the same token from import_products.py

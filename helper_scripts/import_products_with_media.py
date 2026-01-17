@@ -10,8 +10,12 @@ from urllib.parse import quote
 # ==============================
 
 CSV_FILE = "C:/Users/lkrcelic/Downloads/Untitled spreadsheet - Baza kamen - Sheet1 (2).csv"  # <-- change to your real CSV path
-API_URL = "http://localhost:3000/api/products"
-MEDIA_API_URL = "http://localhost:3000/api/media"
+
+# HOSTNAME = "http://localhost:3000"  # Local development
+HOSTNAME = "https://stone-story.vercel.app"  # Production
+
+API_URL = f"{HOSTNAME}/api/products"
+MEDIA_API_URL = f"{HOSTNAME}/api/media"
 
 JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6IjdjNGIzOTJiLTA1MmUtNDcwNy05N2U1LTc2MDk4OTM4ODdhYSIsImlhdCI6MTc2ODM0NTg5MCwiZXhwIjoxNzY5NTU1NDkwfQ.LGP_hIFa8M3lOk0NKswmX0wNT_a4orB-iGRai-eS-qA"  # <-- DO NOT reuse the exposed one
 
