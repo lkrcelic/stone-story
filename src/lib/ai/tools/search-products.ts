@@ -133,7 +133,7 @@ Always use this tool when customers ask about products, stones, materials, or wa
                 AND deleted_at IS NULL
                 AND ts_rank(search_vector, to_tsquery('english', ${searchQuery})) >= 0.2
               ORDER BY rank DESC
-              LIMIT 10
+              LIMIT 20
             `,
           )
           // Log stone names and Id returned by search also display ts_rank value they got
@@ -197,6 +197,7 @@ Always use this tool when customers ask about products, stones, materials, or wa
       }
 
       console.log('[PRODUCT SEARCH] Query where clause:', JSON.stringify(where, null, 2))
+      console.log('[PRODUCT SEARCH] Limit:', input.limit)
 
       // Determine sort order based on filters
       let sort: string | undefined
