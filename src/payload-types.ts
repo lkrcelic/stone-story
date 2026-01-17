@@ -267,6 +267,7 @@ export interface Product {
    * Brief description of the product
    */
   short_description?: string | null;
+  description_search?: string | null;
   /**
    * Country or region of origin
    */
@@ -974,7 +975,7 @@ export interface Cart {
         product?: (number | null) | Product;
         variant?: (number | null) | Variant;
         quantity: number;
-        id?: number | null;
+        id?: string | null;
       }[]
     | null;
   customer?: (number | null) | User;
@@ -1631,6 +1632,7 @@ export interface VariantOptionsSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   short_description?: T;
+  description_search?: T;
   origin?: T;
   type?: T;
   description?: T;

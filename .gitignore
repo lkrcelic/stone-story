@@ -18,6 +18,9 @@ playwright-report/index.html
 # production
 /build
 
+# media uploads (local development only)
+/public/media
+
 # misc
 .DS_Store
 *.pem

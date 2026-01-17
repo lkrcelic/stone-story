@@ -18,6 +18,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { DefaultDocumentIDType, slugField, Where } from 'payload'
+import { populateDescriptionSearch } from './hooks/populateDescriptionSearch'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
@@ -59,6 +60,17 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
       type: 'text',
       admin: {
         description: 'Brief description of the product',
+      },
+    },
+    {
+      name: 'description_search',
+      type: 'text',
+      admin: {
+        hidden: true,
+        readOnly: true,
+      },
+      hooks: {
+        beforeChange: [populateDescriptionSearch],
       },
     },
     {

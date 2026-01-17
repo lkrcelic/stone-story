@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import {
   BoldFeature,
@@ -87,6 +88,16 @@ export default buildConfig({
   globals: [Header, Footer],
   plugins: [
     ...plugins,
+    ...(process.env.VERCEL
+      ? [
+          vercelBlobStorage({
+            collections: {
+              media: true,
+            },
+            token: process.env.BLOB_READ_WRITE_TOKEN || '',
+          }),
+        ]
+      : []),
     // storage-adapter-placeholder
   ],
   secret: process.env.PAYLOAD_SECRET || '',

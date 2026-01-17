@@ -1,17 +1,39 @@
 import { getPayloadDb } from '@/lib/db/client'
+import { sql } from '@payloadcms/db-postgres'
 import { tool } from 'ai'
 import { z } from 'zod'
 
 export const searchProducts = tool({
-  description: `Search for stone products in the database. Use this tool to help customers find products based on:
-- Stone type (marble, sandstone, travertine, limestone, granite, slate, serpentinite)
-- Origin country (Italy, Portugal, Spain, Norway, Sweden, Finland, Germany, UK, France, Austria, Malta, Poland, Greece, Slovenia, Croatia)
-- Product name or title
-- Price range
-- Availability (in stock)
-You can search by multiple criteria at once. Always use this tool when customers ask about products, stones, materials, or want to browse the catalog.`,
+  description: `Search for stone products in the database. 
+
+IMPORTANT: ALWAYS use this tool when users ask about stone types, availability, or any product-related questions.
+
+Search criteria:
+- Stone type (marble, sandstone, travertine, limestone, granite, slate, serpentinite) - use the 'type' parameter
+- Origin country (Italy, Portugal, Spain, Norway, Sweden, Finland, Germany, UK, France, Austria, Malta, Poland, Greece, Slovenia, Croatia) - use the 'origin' parameter
+- Product name or descriptive keywords (colors, features, characteristics) - use the 'query' parameter
+- Price range - use minPrice/maxPrice parameters
+- Availability (in stock) - use the 'inStock' parameter
+
+CRITICAL: Any descriptive words like colors (blue, grey, red), features (polished, rough), usage (facades, flooring, paving), functionality, or characteristics that are NOT stone types or origins MUST be passed in the 'query' parameter. The query parameter uses PostgreSQL full-text search with stemming and relevance ranking to search through product titles, descriptions, and features.
+
+Examples:
+- "blue granite" → type: "granite", query: "blue"
+- "Italian marble" → type: "marble", origin: "italy"
+- "grey sandstone from UK" → type: "sandstone", origin: "uk", query: "grey"
+- "polished limestone" → type: "limestone", query: "polished"
+- "stone for facades" → query: "facades"
+- "what is granite used for" → type: "granite", query: "used for"
+- "interesting limestone features" → type: "limestone", query: "interesting features"
+
+Always use this tool when customers ask about products, stones, materials, or want to browse the catalog.`,
   inputSchema: z.object({
-    query: z.string().optional().describe('General search query for product title or description'),
+    query: z
+      .string()
+      .optional()
+      .describe(
+        'Full-text search query for product title, description, and features. Use this for ANY descriptive keywords like colors (blue, grey, red), characteristics (polished, rough), usage (facades, flooring, paving, retaining walls), functionality, interesting features, or specific product names. This searches through the full product description using PostgreSQL full-text search with stemming and relevance ranking.',
+      ),
     type: z
       .enum(['marble', 'sandstone', 'travertine', 'limestone', 'granite', 'slate', 'serpentinite'])
       .optional()
@@ -39,12 +61,7 @@ You can search by multiple criteria at once. Always use this tool when customers
     minPrice: z.number().optional().describe('Minimum price in USD'),
     maxPrice: z.number().optional().describe('Maximum price in USD'),
     inStock: z.boolean().optional().describe('Filter for products in stock'),
-    limit: z
-      .number()
-      .min(1)
-      .max(20)
-      .default(10)
-      .describe('Maximum number of results to return (1-20)'),
+    limit: z.number().min(1).max(15).describe('Maximum number of results to return (1-15)'),
   }),
   execute: async (input) => {
     try {
@@ -58,11 +75,50 @@ You can search by multiple criteria at once. Always use this tool when customers
       }
 
       // Add text search if query is provided
+      // Use PostgreSQL full-text search with tsvector for intelligent matching
+      let searchMatchingIds: number[] | null = null
       if (input.query) {
-        where.or = [
-          { title: { contains: input.query } },
-          { short_description: { contains: input.query } },
-        ]
+        const searchQuery = input.query
+          .trim()
+          .toLowerCase()
+          .split(/\s+/)
+          .filter((word) => word.length > 2) // Ignore very short words
+          .map((word) => `${word}:*`) // Prefix matching for partial words
+          .join(' | ') // OR logic - match any word, rank higher if more words match
+
+        if (searchQuery) {
+          // Use raw SQL to leverage PostgreSQL's full-text search
+          // Get matching product IDs with relevance ranking
+          console.log('[PRODUCT SEARCH] Full-text search query used: ', searchQuery)
+          const db = payload.db
+          const result = await db.drizzle.execute(
+            sql`
+              SELECT id, ts_rank(search_vector, to_tsquery('english', ${searchQuery})) as rank
+              FROM products 
+              WHERE search_vector @@ to_tsquery('english', ${searchQuery})
+                AND _status = 'published'
+                AND deleted_at IS NULL
+                AND ts_rank(search_vector, to_tsquery('english', ${searchQuery})) >= 0.2
+              ORDER BY rank DESC
+              LIMIT 15
+            `,
+          )
+          searchMatchingIds = result.rows.map((row: any) => row.id)
+
+          // If no matches found, return early
+          if (searchMatchingIds?.length === 0) {
+            return {
+              success: true,
+              count: 0,
+              total: 0,
+              products: [],
+              message: 'No products found matching your search query. Try different keywords.',
+            }
+          }
+
+          // Add the matching IDs to the where clause
+          where.id = { in: searchMatchingIds }
+        }
       }
 
       // Add type filter

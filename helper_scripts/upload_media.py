@@ -11,7 +11,7 @@ API_URL = "http://localhost:3000/api/media"
 
 # Get your JWT token from the browser after logging in to /admin
 # Or use the same token from import_products.py
-JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6ImM5NWNmNzFhLWFkM2UtNGRmOC04NzhlLTc0MDI2OTNkMzk4YyIsImlhdCI6MTc2NDk2NDY3MCwiZXhwIjoxNzY2MTc0MjcwfQ.5rNM9g1j5WcJuVwMce4qinru7tE-c_iOoLJs-D3wUf0"
+JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6IjdjNGIzOTJiLTA1MmUtNDcwNy05N2U1LTc2MDk4OTM4ODdhYSIsImlhdCI6MTc2ODM0NTg5MCwiZXhwIjoxNzY5NTU1NDkwfQ.LGP_hIFa8M3lOk0NKswmX0wNT_a4orB-iGRai-eS-qA"
 
 HEADERS = {
     "Authorization": f"JWT {JWT_TOKEN}"

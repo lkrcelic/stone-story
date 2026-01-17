@@ -28,11 +28,7 @@ type ProductSearchOutput = {
 
 export function ProductSearchResults({ output }: { output: ProductSearchOutput }) {
   if (!output.success || output.products.length === 0) {
-    return (
-      <div className="rounded-lg border bg-muted/50 p-4 text-sm text-muted-foreground">
-        {output.message || 'No products found'}
-      </div>
-    )
+    return null // Don't show anything when no products are found
   }
 
   return (

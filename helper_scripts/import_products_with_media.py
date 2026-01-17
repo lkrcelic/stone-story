@@ -1,15 +1,19 @@
 import csv
 import requests
+import csv
+import random
+import time
+from urllib.parse import quote
 
 # ==============================
 # CONFIG
 # ==============================
 
-CSV_FILE = "C:/Users/lkrcelic/Downloads/Baza kamen - Sheet1 (7).csv"  # <-- change to your real CSV path
+CSV_FILE = "C:/Users/lkrcelic/Downloads/Untitled spreadsheet - Baza kamen - Sheet1 (2).csv"  # <-- change to your real CSV path
 API_URL = "http://localhost:3000/api/products"
 MEDIA_API_URL = "http://localhost:3000/api/media"
 
-JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6ImM5NWNmNzFhLWFkM2UtNGRmOC04NzhlLTc0MDI2OTNkMzk4YyIsImlhdCI6MTc2NDk2NDY3MCwiZXhwIjoxNzY2MTc0MjcwfQ.5rNM9g1j5WcJuVwMce4qinru7tE-c_iOoLJs-D3wUf0"  # <-- DO NOT reuse the exposed one
+JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6IjdjNGIzOTJiLTA1MmUtNDcwNy05N2U1LTc2MDk4OTM4ODdhYSIsImlhdCI6MTc2ODM0NTg5MCwiZXhwIjoxNzY5NTU1NDkwfQ.LGP_hIFa8M3lOk0NKswmX0wNT_a4orB-iGRai-eS-qA"  # <-- DO NOT reuse the exposed one
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -26,8 +30,10 @@ def find_media_by_title(title):
     Returns the media ID if found, None otherwise.
     """
     try:
-        # Query the media collection for matching alt text
-        search_url = f"{MEDIA_API_URL}?where[alt][equals]={title}"
+        # Query the media collection for matching alt text (URL encode the title)
+        # Use 'like' for case-insensitive matching
+        encoded_title = quote(title)
+        search_url = f"{MEDIA_API_URL}?where[alt][like]={encoded_title}"
         response = requests.get(search_url, headers=HEADERS)
         
         if response.status_code == 200:
@@ -36,6 +42,12 @@ def find_media_by_title(title):
             if docs:
                 # Return the first matching media ID
                 return docs[0]['id']
+            else:
+                # Debug: Show what we searched for and suggest checking media
+                print(f"   🔍 Searched for alt text: '{title}'")
+                print(f"   💡 Check if media exists with this exact alt text in admin")
+        else:
+            print(f"   ⚠️  API error: {response.status_code}")
         return None
     except Exception as e:
         print(f"⚠️  Error searching for media '{title}': {e}")
@@ -124,10 +136,10 @@ with open(CSV_FILE, newline="", encoding="utf-8") as csvfile:
                 "short_description": short_description,
                 "origin": origin,
                 "type": product_type,
-                "inventory": 20,
+                "inventory": random.randint(1, 30),
                 "enableVariants": False,
                 "priceInUSDEnabled": True,
-                "priceInUSD": 15,
+                "priceInUSD": random.randint(1, 30),
                 "_status": "published"
             }
             

@@ -133,6 +133,15 @@ const PurePreviewMessage = ({
             if (type === 'tool-searchProducts') {
               const { toolCallId, state } = part
 
+              // Hide the entire tool UI if no products were found
+              if (
+                state === 'output-available' &&
+                !('error' in part.output) &&
+                part.output.products?.length === 0
+              ) {
+                return null
+              }
+
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-searchProducts" />
