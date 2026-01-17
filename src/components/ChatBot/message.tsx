@@ -8,7 +8,7 @@ import { memo, useState } from 'react'
 import { useDataStream } from './data-stream-provider'
 import { MessageContent } from './elements/message'
 import { Response } from './elements/response'
-import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from './elements/tool'
+import { Tool, ToolContent, ToolHeader, ToolOutput } from './elements/tool'
 import { SparklesIcon } from './icons'
 import { MessageActions } from './message-actions'
 import { MessageEditor } from './message-editor'
@@ -146,7 +146,12 @@ const PurePreviewMessage = ({
                 <Tool defaultOpen={true} key={toolCallId}>
                   <ToolHeader state={state} type="tool-searchProducts" />
                   <ToolContent>
-                    {state === 'input-available' && <ToolInput input={part.input} />}
+                    {state === 'input-available' && (
+                      <div className="flex items-center gap-2 p-4">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+                        <span className="text-sm text-gray-600">Searching products...</span>
+                      </div>
+                    )}
                     {state === 'output-available' && (
                       <ToolOutput
                         errorText={undefined}
