@@ -61,7 +61,6 @@ Always use this tool when customers ask about products, stones, materials, or wa
     minPrice: z.number().optional().describe('Minimum price in USD'),
     maxPrice: z.number().optional().describe('Maximum price in USD'),
     inStock: z.boolean().optional().describe('Filter for products in stock'),
-    limit: z.number().min(1).max(15).describe('Maximum number of results to return (1-15)'),
   }),
   execute: async (input) => {
     try {
@@ -77,6 +76,7 @@ Always use this tool when customers ask about products, stones, materials, or wa
       // Add text search if query is provided
       // Use PostgreSQL full-text search with tsvector for intelligent matching
       let searchMatchingIds: number[] | null = null
+      let idRankMap: Map<number, number> | null = null as Map<number, number> | null
       if (input.query) {
         const searchQuery = input.query
           .trim()
@@ -103,7 +103,9 @@ Always use this tool when customers ask about products, stones, materials, or wa
               LIMIT 15
             `,
           )
+          // Store IDs with their rank order for sorting later
           searchMatchingIds = result.rows.map((row: any) => row.id)
+          const idRankMap = new Map(result.rows.map((row: any, index: number) => [row.id, index]))
 
           // If no matches found, return early
           if (searchMatchingIds?.length === 0) {
@@ -156,14 +158,25 @@ Always use this tool when customers ask about products, stones, materials, or wa
       const result = await payload.find({
         collection: 'products',
         where,
-        limit: input.limit,
+        limit: 10,
         depth: 1,
       })
 
       console.log('[PRODUCT SEARCH] Found', result.docs.length, 'products')
 
+      // Sort results by FTS relevance if we did a full-text search
+      let sortedDocs = result.docs
+      if (idRankMap && idRankMap.size > 0) {
+        const rankMap = idRankMap // Capture for closure
+        sortedDocs = [...result.docs].sort((a: any, b: any) => {
+          const rankA = rankMap.get(a.id) ?? Infinity
+          const rankB = rankMap.get(b.id) ?? Infinity
+          return rankA - rankB // Lower index = higher rank = better match
+        })
+      }
+
       // Format the results for the AI
-      const products = result.docs.map((product: any) => {
+      const products = sortedDocs.map((product: any) => {
         const gallery = product.gallery || []
         const images = gallery
           .map((item: any) => {

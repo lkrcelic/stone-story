@@ -17,7 +17,8 @@ HOSTNAME = "https://stone-story.vercel.app"  # Production
 API_URL = f"{HOSTNAME}/api/products"
 MEDIA_API_URL = f"{HOSTNAME}/api/media"
 
-JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6IjdjNGIzOTJiLTA1MmUtNDcwNy05N2U1LTc2MDk4OTM4ODdhYSIsImlhdCI6MTc2ODM0NTg5MCwiZXhwIjoxNzY5NTU1NDkwfQ.LGP_hIFa8M3lOk0NKswmX0wNT_a4orB-iGRai-eS-qA"  # <-- DO NOT reuse the exposed one
+#JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6IjdjNGIzOTJiLTA1MmUtNDcwNy05N2U1LTc2MDk4OTM4ODdhYSIsImlhdCI6MTc2ODM0NTg5MCwiZXhwIjoxNzY5NTU1NDkwfQ.LGP_hIFa8M3lOk0NKswmX0wNT_a4orB-iGRai-eS-qA"  # <-- DO NOT reuse the exposed one
+JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY29sbGVjdGlvbiI6InVzZXJzIiwiZW1haWwiOiJsb3Zyby5rcmNlbGljQGdtYWlsLmNvbSIsInNpZCI6ImExNWNiNWM3LTVlMTgtNGM0OS1hOWNlLWFiZDIyNjI2NGVhYSIsImlhdCI6MTc2ODE3Mjk0MywiZXhwIjoxNzY5MzgyNTQzfQ.GkLqZKSqfhccXB99OrO438WTX5RaooaMMD2uCAyFi7g"
 
 HEADERS = {
     "Content-Type": "application/json",
