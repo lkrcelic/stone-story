@@ -142,9 +142,26 @@ const PurePreviewMessage = ({
                 return null
               }
 
+              // Generate short description based on products
+              let headerText = 'Searching products...'
+              if (state === 'output-available' && !('error' in part.output)) {
+                const products = part.output.products || []
+                if (products.length > 0) {
+                  // Get the first few product titles for a natural description
+                  const titles = products.slice(0, 3).map((p: any) => p.title)
+                  if (titles.length === 1) {
+                    headerText = titles[0]
+                  } else if (titles.length === 2) {
+                    headerText = `${titles[0]}, ${titles[1]}`
+                  } else {
+                    headerText = `${titles[0]}, ${titles[1]}, and ${products.length - 2} more`
+                  }
+                }
+              }
+
               return (
                 <Tool defaultOpen={true} key={toolCallId}>
-                  <ToolHeader state={state} type="tool-searchProducts" />
+                  <ToolHeader state={state} type={headerText} />
                   <ToolContent>
                     {state === 'input-available' && (
                       <div className="flex items-center gap-2 p-4">

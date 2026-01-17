@@ -8,14 +8,7 @@ import {
 } from '@/components/ChatBot/ui/collapsible'
 import { cn } from '@/lib/utils'
 import type { ToolUIPart } from 'ai'
-import {
-  CheckCircleIcon,
-  ChevronDownIcon,
-  CircleIcon,
-  ClockIcon,
-  WrenchIcon,
-  XCircleIcon,
-} from 'lucide-react'
+import { CheckCircleIcon, ChevronDownIcon, CircleIcon, ClockIcon, XCircleIcon } from 'lucide-react'
 import type { ComponentProps, ReactNode } from 'react'
 import { CodeBlock } from './code-block'
 
@@ -26,7 +19,7 @@ export const Tool = ({ className, ...props }: ToolProps) => (
 )
 
 export type ToolHeaderProps = {
-  type: ToolUIPart['type']
+  type: string
   state: ToolUIPart['state']
   className?: string
 }
@@ -60,11 +53,9 @@ export const ToolHeader = ({ className, type, state, ...props }: ToolHeaderProps
     {...props}
   >
     <div className="flex min-w-0 flex-1 items-center gap-2">
-      <WrenchIcon className="size-4 shrink-0 text-muted-foreground" />
       <span className="truncate font-medium text-sm">{type}</span>
     </div>
     <div className="flex shrink-0 items-center gap-2">
-      {getStatusBadge(state)}
       <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
     </div>
   </CollapsibleTrigger>
@@ -108,14 +99,11 @@ export const ToolOutput = ({ className, output, errorText, ...props }: ToolOutpu
   }
 
   return (
-    <div className={cn('space-y-2 p-4', className)} {...props}>
-      <h4 className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-        {errorText ? 'Error' : 'Result'}
-      </h4>
+    <div className={cn('p-4', className)} {...props}>
       <div
         className={cn(
           'overflow-x-auto rounded-md text-xs [&_table]:w-full',
-          errorText ? 'bg-destructive/10 text-destructive' : 'bg-muted/50 text-foreground',
+          errorText ? 'bg-destructive/10 text-destructive' : '',
         )}
       >
         {errorText && <div>{errorText}</div>}
