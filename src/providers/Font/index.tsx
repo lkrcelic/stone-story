@@ -5,10 +5,12 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 export type FontType = 'normal' | 'dyslexic'
 export type FontSize = 'normal' | 'large'
 export type LinkStyle = 'normal' | 'highlight'
+export type ImageFilter = 'normal' | 'grayscale'
 
 export const fontLocalStorageKey = 'font-type'
 export const fontSizeLocalStorageKey = 'font-size'
 export const linkStyleLocalStorageKey = 'link-style'
+export const imageFilterLocalStorageKey = 'image-filter'
 
 interface FontContextType {
   font: FontType | null
@@ -17,6 +19,8 @@ interface FontContextType {
   setFontSize: (size: FontSize | null) => void
   linkStyle: LinkStyle | null
   setLinkStyle: (style: LinkStyle | null) => void
+  imageFilter: ImageFilter | null
+  setImageFilter: (filter: ImageFilter | null) => void
 }
 
 const FontContext = createContext<FontContextType | undefined>(undefined)
@@ -33,6 +37,7 @@ export const FontProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [font, setFontState] = useState<FontType | null>(null)
   const [fontSize, setFontSizeState] = useState<FontSize | null>(null)
   const [linkStyle, setLinkStyleState] = useState<LinkStyle | null>(null)
+  const [imageFilter, setImageFilterState] = useState<ImageFilter | null>(null)
 
   useEffect(() => {
     const storedFont = window.localStorage.getItem(fontLocalStorageKey) as FontType | null
@@ -53,6 +58,14 @@ export const FontProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedLinkStyle) {
       setLinkStyleState(storedLinkStyle)
       document.documentElement.setAttribute('data-link-style', storedLinkStyle)
+    }
+
+    const storedImageFilter = window.localStorage.getItem(
+      imageFilterLocalStorageKey,
+    ) as ImageFilter | null
+    if (storedImageFilter) {
+      setImageFilterState(storedImageFilter)
+      document.documentElement.setAttribute('data-image-filter', storedImageFilter)
     }
   }, [])
 
@@ -92,8 +105,31 @@ export const FontProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [])
 
+  const setImageFilter = useCallback((filterToSet: ImageFilter | null) => {
+    if (filterToSet === null) {
+      window.localStorage.removeItem(imageFilterLocalStorageKey)
+      document.documentElement.removeAttribute('data-image-filter')
+      setImageFilterState(null)
+    } else {
+      setImageFilterState(filterToSet)
+      window.localStorage.setItem(imageFilterLocalStorageKey, filterToSet)
+      document.documentElement.setAttribute('data-image-filter', filterToSet)
+    }
+  }, [])
+
   return (
-    <FontContext.Provider value={{ font, setFont, fontSize, setFontSize, linkStyle, setLinkStyle }}>
+    <FontContext.Provider
+      value={{
+        font,
+        setFont,
+        fontSize,
+        setFontSize,
+        linkStyle,
+        setLinkStyle,
+        imageFilter,
+        setImageFilter,
+      }}
+    >
       {children}
     </FontContext.Provider>
   )

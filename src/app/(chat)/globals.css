@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "katex/dist/katex.min.css";
+@import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
 @import url('https://fonts.cdnfonts.com/css/opendyslexic');
 
 /* include utility classes in streamdown */
@@ -216,7 +216,7 @@
     pointer-events: none !important;
   }
 
-  *[class^="text-"] {
+  *[class^='text-'] {
     color: transparent;
     @apply rounded-md bg-foreground/20 select-none animate-pulse;
   }
@@ -343,6 +343,14 @@
 [data-link-style='highlight'] a:hover .text-primary\/50,
 [data-link-style='highlight'] a:hover .group-hover\:text-primary\/100 {
   color: hsl(222.2 47.4% 11.2%) !important;
+}
+
+[data-image-filter='grayscale'] img {
+  filter: grayscale(100%) !important;
+}
+
+[data-image-filter='grayscale'] video {
+  filter: grayscale(100%) !important;
 }
 
 @layer base {
