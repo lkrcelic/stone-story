@@ -133,6 +133,12 @@ const PurePreviewMessage = ({
             if (type === 'tool-searchProducts') {
               const { toolCallId, state } = part
 
+              // Hide internal/lookup queries from the user
+              const args = (part as any).toolInvocation?.args || (part as any).args
+              if (args?.internal === true) {
+                return null
+              }
+
               // Hide the entire tool UI if no products were found
               if (
                 state === 'output-available' &&

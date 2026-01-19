@@ -18,17 +18,14 @@ Search criteria:
 
 CRITICAL: Any descriptive words like colors (blue, grey, red), features (polished, rough), usage (facades, flooring, paving), functionality, or characteristics that are NOT stone types or origins MUST be passed in the 'query' parameter. The query parameter uses PostgreSQL full-text search with stemming and relevance ranking to search through product titles, descriptions, and features.
 
-SIMILARITY QUERIES - CRITICAL WORKFLOW:
-When user asks "stones like X" or "similar to X", follow this EXACT workflow:
-1. First call: Search for X with limit: 1 → This is INTERNAL ONLY for extracting characteristics. DO NOT present this result in your response to the user.
-2. Read the product description from step 1 and extract: color, pattern, finish, origin, type
-3. Second call: Search using extracted characteristics (e.g., query: "beige cream", type: "marble", origin: "italy", limit: 8-10)
-4. Present ONLY the results from step 3 to the user as "Here are stones similar to X:"
+SIMILARITY QUERIES:
+When user asks "stones like X" or "similar to X":
+1. First call: query: "X", limit: 1, internal: true (lookup to extract characteristics - hidden from user)
+2. Second call: Use extracted characteristics to find similar stones (shown to user)
 
-Example: "stones like Botticino Classico"
-- Call 1: query: "Botticino Classico", limit: 1 (INTERNAL - extract that it's beige/cream Italian marble)
-- Call 2: query: "beige cream", type: "marble", origin: "italy", limit: 8 (SHOW THIS to user)
-- Your response: "Here are stones similar to Botticino Classico:" + show Call 2 results ONLY
+Example: "stones like Botticino"
+- Call 1: query: "Botticino", limit: 1, internal: true
+- Call 2: query: "beige cream", type: "marble", limit: 8
 
 LIMIT PARAMETER:
 - Specific product lookup (e.g., "Is Bohus Red available?") → limit: 1-2
@@ -46,14 +43,7 @@ PRICE SORTING:
 - For "cheapest" queries: Set maxPrice to 999999 to trigger ascending sort
 
 MULTI-STEP QUERIES:
-You can call this tool multiple times to answer complex questions:
-- "What's the price range?" → Call twice: once with minPrice: 0, limit: 1 (most expensive), once with maxPrice: 999999, limit: 1 (cheapest)
-- "Compare expensive vs cheap marble" → Call twice with type: "marble" and different price parameters
-- Never show lookup queries to the user
-
-WHEN TO SHOW MULTIPLE LISTS vs ONE LIST:
-- SHOW MULTIPLE LISTS: When user asks for breakdown by categories (e.g., "stone types from Spain", "compare expensive vs cheap", "price range")
-- SHOW ONE LIST ONLY: When user asks for similarity/like queries (e.g., "stones like Crema", "similar to Botticino") - intermediate lookups are HIDDEN
+You can call this tool multiple times. Use internal: true for any lookup that should be hidden from the user.
 
 Examples:
 - "blue granite" → type: "granite", query: "blue", limit: 10
@@ -105,6 +95,12 @@ Always use this tool when customers ask about products, stones, materials, or wa
       .describe('Maximum price in USD, use this when asked about prices'),
     inStock: z.boolean().optional().describe('Filter for products in stock'),
     limit: z.number().min(1).max(10).optional().describe('Maximum number of results to return'),
+    internal: z
+      .boolean()
+      .optional()
+      .describe(
+        'Set to true for lookup queries that should NOT be shown to the user (e.g., when looking up a product to extract characteristics for similarity search). The UI will hide results from internal queries.',
+      ),
   }),
   execute: async (input) => {
     try {
