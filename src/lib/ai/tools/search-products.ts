@@ -44,6 +44,8 @@ You can call this tool multiple times to answer complex questions:
 - "What's the price range?" → Call twice: once with minPrice: 0, limit: 1 (most expensive), once with maxPrice: 999999, limit: 1 (cheapest)
 - "Compare expensive vs cheap marble" → Call twice with type: "marble" and different price parameters
 
+IMPORTANT: When using multiple queries to refine search (e.g., "stones like Cream" → first lookup "Cream", then search similar), only present the FINAL result list to the user. Do not show intermediate lookup results unless they are specifically needed for the answer. The user only wants to see the final relevant products, not the lookup steps.
+
 Examples:
 - "blue granite" → type: "granite", query: "blue", limit: 10
 - "Italian marble" → type: "marble", origin: "italy", limit: 10
