@@ -120,7 +120,7 @@ export const AccessibilityButton: React.FC = () => {
                   <path d="m6.34 17.66-1.41 1.41" />
                   <path d="m19.07 4.93-1.41 1.41" />
                 </svg>
-                <span className="text-sm font-medium">Light</span>
+                <span className="text-sm font-medium">Dark</span>
               </>
             ) : (
               <>
@@ -137,7 +137,7 @@ export const AccessibilityButton: React.FC = () => {
                 >
                   <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
-                <span className="text-sm font-medium">Dark</span>
+                <span className="text-sm font-medium">Light</span>
               </>
             )}
           </button>
@@ -163,7 +163,7 @@ export const AccessibilityButton: React.FC = () => {
               <path d="M12 4v16" />
             </svg>
             <span className="text-sm font-medium">
-              {currentFont === 'normal' ? 'Normal' : 'Dyslexic'}
+              {currentFont === 'normal' ? 'Dyslexic' : 'Normal'}
             </span>
           </button>
           <button
@@ -183,13 +183,16 @@ export const AccessibilityButton: React.FC = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-              <circle cx="18" cy="12" r="3" />
+              <path d="M3 7V6a2 2 0 0 1 2-2h2" />
+              <path d="M17 4h2a2 2 0 0 1 2 2v1" />
+              <path d="M21 17v1a2 2 0 0 1-2 2h-2" />
+              <path d="M7 20H5a2 2 0 0 1-2-2v-1" />
+              <path d="M7 8h10" />
+              <path d="M12 8v8" />
+              <path d="M9 16h6" />
             </svg>
             <span className="text-sm font-medium">
-              {currentFontSize === 'normal' ? 'Normal' : 'Large'}
+              {currentFontSize === 'normal' ? 'Large' : 'Normal'}
             </span>
           </button>
           <button
@@ -213,7 +216,7 @@ export const AccessibilityButton: React.FC = () => {
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
             </svg>
             <span className="text-sm font-medium">
-              {currentLinkStyle === 'normal' ? 'Normal' : 'Highlight'}
+              {currentLinkStyle === 'normal' ? 'Highlight' : 'Normal'}
             </span>
           </button>
           <button
