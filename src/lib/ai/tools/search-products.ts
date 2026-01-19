@@ -23,6 +23,7 @@ When asked for "similar to X" or "like X", search using descriptive characterist
 - Extract key features: color, pattern, finish, origin, type
 - Use these features in the query parameter to find similar products
 - Example: "similar to Botticino Classico" → Look up Botticino first, then search for: query: "beige cream Italian marble", type: "marble", limit: 8
+- CRITICAL: For "like X" or "similar to X" queries, ONLY show the final similar products list. DO NOT show the initial lookup of X to the user. The lookup is only for extracting characteristics.
 
 LIMIT PARAMETER:
 - Specific product lookup (e.g., "Is Bohus Red available?") → limit: 1-2
@@ -43,8 +44,11 @@ MULTI-STEP QUERIES:
 You can call this tool multiple times to answer complex questions:
 - "What's the price range?" → Call twice: once with minPrice: 0, limit: 1 (most expensive), once with maxPrice: 999999, limit: 1 (cheapest)
 - "Compare expensive vs cheap marble" → Call twice with type: "marble" and different price parameters
+- Never show lookup queries to the user
 
-IMPORTANT: When using multiple queries to refine search (e.g., "stones like Cream" → first lookup "Cream", then search similar), only present the FINAL result list to the user. Do not show intermediate lookup results unless they are specifically needed for the answer. The user only wants to see the final relevant products, not the lookup steps.
+WHEN TO SHOW MULTIPLE LISTS vs ONE LIST:
+- SHOW MULTIPLE LISTS: When user asks for breakdown by categories (e.g., "stone types from Spain", "compare expensive vs cheap", "price range")
+- SHOW ONE LIST ONLY: When user asks for similarity/like queries (e.g., "stones like Crema", "similar to Botticino") - intermediate lookups are HIDDEN
 
 Examples:
 - "blue granite" → type: "granite", query: "blue", limit: 10
