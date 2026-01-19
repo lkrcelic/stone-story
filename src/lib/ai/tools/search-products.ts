@@ -18,12 +18,17 @@ Search criteria:
 
 CRITICAL: Any descriptive words like colors (blue, grey, red), features (polished, rough), usage (facades, flooring, paving), functionality, or characteristics that are NOT stone types or origins MUST be passed in the 'query' parameter. The query parameter uses PostgreSQL full-text search with stemming and relevance ranking to search through product titles, descriptions, and features.
 
-SIMILARITY QUERIES:
-When asked for "similar to X" or "like X", search using descriptive characteristics from the product's description, not just the name:
-- Extract key features: color, pattern, finish, origin, type
-- Use these features in the query parameter to find similar products
-- Example: "similar to Botticino Classico" → Look up Botticino first, then search for: query: "beige cream Italian marble", type: "marble", limit: 8
-- CRITICAL: For "like X" or "similar to X" queries, ONLY show the final similar products list. DO NOT show the initial lookup of X to the user. The lookup is only for extracting characteristics.
+SIMILARITY QUERIES - CRITICAL WORKFLOW:
+When user asks "stones like X" or "similar to X", follow this EXACT workflow:
+1. First call: Search for X with limit: 1 → This is INTERNAL ONLY for extracting characteristics. DO NOT present this result in your response to the user.
+2. Read the product description from step 1 and extract: color, pattern, finish, origin, type
+3. Second call: Search using extracted characteristics (e.g., query: "beige cream", type: "marble", origin: "italy", limit: 8-10)
+4. Present ONLY the results from step 3 to the user as "Here are stones similar to X:"
+
+Example: "stones like Botticino Classico"
+- Call 1: query: "Botticino Classico", limit: 1 (INTERNAL - extract that it's beige/cream Italian marble)
+- Call 2: query: "beige cream", type: "marble", origin: "italy", limit: 8 (SHOW THIS to user)
+- Your response: "Here are stones similar to Botticino Classico:" + show Call 2 results ONLY
 
 LIMIT PARAMETER:
 - Specific product lookup (e.g., "Is Bohus Red available?") → limit: 1-2
