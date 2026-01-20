@@ -34,14 +34,20 @@ Example: "marble like Botticino" (user explicitly wants marble)
 - Call 1: query: "Botticino", limit: 1, internal: true
 - Call 2: query: "beige cream", type: "marble", limit: 8 (type filter because user asked for marble)
 
-LIMIT PARAMETER:
-- Specific product lookup (e.g., "Is Bohus Red available?") → limit: 1-2
-- "Similar to X" or "like X" queries → limit: 8-10 (show variety)
-- "Top N" queries → limit: N (match the number requested)
-- Browsing/exploration (e.g., "show me marble") → limit: 10
-- Comparison queries → limit: 5-8
-- When using Most expensive/cheapest find all with the same pricing that fit the condition - variable limit
-- Default: limit: 10
+LIMIT PARAMETER - IMPORTANT:
+Use limit: 1 ONLY when user explicitly asks for ONE result:
+- "What is THE cheapest marble?" → limit: 1
+- "Show me THE most expensive stone" → limit: 1
+- internal: true lookups for similarity queries → limit: 1
+
+Use limit: 5-10 for everything else (DEFAULT is 10):
+- "Do you have Bohus?" → limit: 5-10 (there may be Bohus Red, Bohus Grey, etc.)
+- "Is Crema available?" → limit: 5-10 (show all Crema variants)
+- "Show me Italian marble" → limit: 10
+- "Similar to X" queries → limit: 8-10
+- "Top 5 cheapest" → limit: 5 (match the number)
+
+NEVER use limit: 1 for availability questions like "Do you have X?" - always show all matching products!
 
 PRICE SORTING:
 - Setting minPrice without maxPrice → Results sorted by price DESCENDING (most expensive first)
