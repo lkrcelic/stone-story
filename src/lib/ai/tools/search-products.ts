@@ -23,9 +23,16 @@ When user asks "stones like X" or "similar to X":
 1. First call: query: "X", limit: 1, internal: true (lookup to extract characteristics - hidden from user)
 2. Second call: Use extracted characteristics to find similar stones (shown to user)
 
+IMPORTANT: Do NOT include 'type' filter in similarity searches unless user explicitly asks for it (e.g., "marble like X").
+This allows finding visually similar stones across different stone types.
+
 Example: "stones like Botticino"
 - Call 1: query: "Botticino", limit: 1, internal: true
-- Call 2: query: "beige cream", type: "marble", limit: 8
+- Call 2: query: "beige cream light veins", limit: 8 (NO type filter - find all similar stones)
+
+Example: "marble like Botticino" (user explicitly wants marble)
+- Call 1: query: "Botticino", limit: 1, internal: true
+- Call 2: query: "beige cream", type: "marble", limit: 8 (type filter because user asked for marble)
 
 LIMIT PARAMETER:
 - Specific product lookup (e.g., "Is Bohus Red available?") → limit: 1-2
@@ -41,6 +48,14 @@ PRICE SORTING:
 - Setting maxPrice without minPrice → Results sorted by price ASCENDING (cheapest first)
 - For "most expensive" queries: Set minPrice to 0 to trigger descending sort
 - For "cheapest" queries: Set maxPrice to 999999 to trigger ascending sort
+
+NO RESULTS / UNKNOWN:
+If no products match the user's query, be honest about it. Don't make up products that don't exist.
+Say something like: "I couldn't find any stones matching that criteria in our catalog."
+Then ask a helpful follow-up question to assist the user, such as:
+- "Would you like me to search for similar alternatives?"
+- "Can you describe what characteristics you're looking for (color, texture, usage)?"
+- "Would you like to see what we have in a similar color or from a specific region?"
 
 MULTI-STEP QUERIES:
 You can call this tool multiple times. Use internal: true for any lookup that should be hidden from the user.
