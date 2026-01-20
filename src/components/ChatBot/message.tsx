@@ -134,8 +134,7 @@ const PurePreviewMessage = ({
               const { toolCallId, state } = part
 
               // Hide internal/lookup queries from the user
-              const args = (part as any).toolInvocation?.args || (part as any).args
-              if (args?.internal === true) {
+              if ((part as any).input?.internal === true) {
                 return null
               }
 
