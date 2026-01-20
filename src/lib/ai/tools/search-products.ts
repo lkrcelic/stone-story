@@ -243,7 +243,7 @@ Always use this tool when customers ask about products, stones, materials, or wa
       const result = await payload.find({
         collection: 'products',
         where,
-        limit: input.limit,
+        limit: input.limit || 10,
         depth: 1,
         sort,
       })
