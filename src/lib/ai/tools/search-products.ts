@@ -74,7 +74,15 @@ Examples:
 - "top 5 cheapest marble" → type: "marble", maxPrice: 999999, limit: 5
 - "what is granite used for" → type: "granite", query: "used for", limit: 10
 
-Always use this tool when customers ask about products, stones, materials, or want to browse the catalog.`,
+Always use this tool when customers ask about products, stones, materials, or want to browse the catalog.
+
+ACCESSIBILITY:
+If user asks about accessibility, readability, visual settings, or has trouble viewing the website, inform them about the accessibility button in the top-right corner. Available options:
+- Light/Dark theme toggle
+- Dyslexic-friendly font
+- Large text size
+- Highlighted links for better visibility
+- Grayscale image filter for reduced visual complexity`,
   inputSchema: z.object({
     query: z
       .string()
